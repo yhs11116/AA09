@@ -1,0 +1,17 @@
+{
+  "name": "aa09-rpt03",
+  "version": "1.0.0",
+  "description": "start node peoject",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "test"
+  ],
+  "author": "aa09",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
