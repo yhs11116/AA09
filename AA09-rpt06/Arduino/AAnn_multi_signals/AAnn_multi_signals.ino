@@ -19,12 +19,10 @@ void loop() {
   humi = random(40,90);
   temp = random(-10, 30);
   lux = random(150,250);
-  Serial.print("AA00, Ambient lux: ");
   Serial.print(lux);
-  Serial.print(" , Humidity: ");
+  Serial.print(",");
   Serial.print(humi);
-  Serial.print(" , Temperature: ");
+  Serial.print(",");
   Serial.println(temp);
   delay(100);        // delay in between reads for stability
 }
-
