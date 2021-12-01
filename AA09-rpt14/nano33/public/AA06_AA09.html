@@ -1,0 +1,387 @@
+<!DOCTYPE html> 
+<head>  
+  <meta charset="utf-8">
+  <title>AA06-AA09</title> 
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.1/socket.io.js"></script>
+
+  <script src="gauge.min.js"></script>
+
+  <style>body{padding:0;margin:30;background:#fff}</style>
+</head>
+
+<body>  <!-- style="width:100%;height:100%"> -->
+    <!-- Plotly chart will be drawn inside this DIV -->
+    <h1 align="center"> AA06-AA09 </h1>
+    <h3 align="center"> on Time: <span id="time"> </span> </h3> 
+    <div id="myDiv"></div>
+    <hr>
+
+    <script>
+      /* JAVASCRIPT CODE GOES HERE */
+      var streamPlot1 = document.getElementById('myDiv');
+      var streamPlot2 = document.getElementById('myDiv');
+      var streamPlot3 = document.getElementById('myDiv');
+      var ctime = document.getElementById('time');
+      var tArray = [], // time of data arrival
+        y1Track = [], 
+        y2Track = [], 
+        y3Track = [], 
+
+        y4Track = [],
+        y5Track = [],
+        y6Track = [],
+
+        y7Track = [],
+        y8Track = [],
+        y9Track = [],
+
+        numPts = 50, // number of data points in x-axis                
+        dtda = [],  // 1 x 4 array : [date, data1, data2, data3] from sensors
+        preX = -1,
+        preY = -1,
+        preZ = -1,
+        initFlag = true;
+
+    var socket = io.connect('http://life21c.inje.ac.kr:3000'); // port = 3000  
+    socket.on('connect', function () {
+        socket.on('message', function (msg) {
+            // initial plot
+            if(msg[0]!='' && initFlag){
+                dtda[0]=msg[0];
+                dtda[1]=parseFloat(msg[5]);  
+                dtda[2]=parseFloat(msg[6]); 
+                dtda[3]=parseFloat(msg[7]);  
+
+                dtda[4]=parseFloat(msg[5]);  
+                dtda[5]=parseFloat(msg[6]); 
+                dtda[6]=parseFloat(msg[7]); 
+
+                dtda[7]=parseFloat(msg[5]);  
+                dtda[8]=parseFloat(msg[6]); 
+                dtda[9]=parseFloat(msg[7]); 
+                init();
+                initFlag=false;
+            }
+            
+            dtda[0]=msg[0];
+            dtda[1] = parseFloat(msg[5]); 
+            dtda[2] = parseFloat(msg[6]);
+            dtda[3] = parseFloat(msg[7]);
+
+            dtda[4] = parseFloat(msg[5]); 
+            dtda[5] = parseFloat(msg[6]);
+            dtda[6] = parseFloat(msg[7]);
+
+            dtda[7] = parseFloat(msg[5]); 
+            dtda[8] = parseFloat(msg[6]);
+            dtda[9] = parseFloat(msg[7]);
+
+            // Only when any of temperature or Luminosity is different from the previous one, the screen is redrawed.
+            if (dtda[1] != preX || dtda[2] != preY || dtda[3] != preZ) {  // any change?
+                preX = dtda[1];  
+                preY = dtda[2];
+                preZ = dtda[3];
+
+                preX = dtda[4];  
+                preY = dtda[5];
+                preZ = dtda[6];
+
+                preX = dtda[7];  
+                preY = dtda[8];
+                preZ = dtda[9];
+                                
+                // when new data is coming, keep on streaming            
+                ctime.innerHTML = dtda[0];
+
+                tArray = tArray.concat(dtda[0]);
+                tArray.splice(0, 1);  // remove the oldest data
+                y1Track = y1Track.concat(dtda[1]);
+                y1Track.splice(0, 1); // remove the oldest data
+                y2Track = y2Track.concat(dtda[2]);
+                y2Track.splice(0, 1);            
+                y3Track = y3Track.concat(dtda[3]); // b
+                y3Track.splice(0, 1);
+
+                y4Track = y4Track.concat(dtda[4]);
+                y4Track.splice(0, 1); // remove the oldest data
+                y5Track = y5Track.concat(dtda[5]);
+                y5Track.splice(0, 1);            
+                y6Track = y6Track.concat(dtda[6]); // b
+                y6Track.splice(0, 1);
+
+                y7Track = y7Track.concat(dtda[7]);
+                y7Track.splice(0, 1); // remove the oldest data
+                y8Track = y8Track.concat(dtda[8]);
+                y8Track.splice(0, 1);            
+                y9Track = y9Track.concat(dtda[9]); // b
+                y9Track.splice(0, 1);
+
+
+                var update1 = {
+                    x:  [tArray],  
+                    y:  [y1Track, y2Track, y3Track]
+                }
+
+                Plotly.update(streamPlot1, update1);
+
+                var update2 = {
+                    x:  [tArray],  
+                    y:  [y4Track, y5Track, y6Track]
+                }
+
+                Plotly.update(streamPlot2, update2);
+
+                var update3 = {
+                    x:  [tArray],  
+                    y:  [y7Track, y8Track, y9Track]
+                }
+
+                Plotly.update(streamPlot3, update3);
+            }
+
+      });
+    }); 
+
+    function init() {  
+        for ( i = 0; i < numPts; i++) {
+            tArray.push(dtda[0]);
+            y1Track.push(dtda[1]); 
+            y2Track.push(dtda[2]);  
+            y3Track.push(dtda[3]); 
+        }
+        Plotly.plot(streamPlot1, data01, layout01);
+    }
+
+    function init() {  
+        for ( i = 0; i < numPts; i++) {
+            tArray.push(dtda[0]);
+            y4Track.push(dtda[1]); 
+            y5Track.push(dtda[2]);  
+            y6Track.push(dtda[3]);
+        }
+        Plotly.plot(streamPlot2, data02, layout02);
+    }
+    function init() {  
+        for ( i = 0; i < numPts; i++) {
+            tArray.push(dtda[0]);
+            y7Track.push(dtda[1]); 
+            y8Track.push(dtda[2]);  
+            y9Track.push(dtda[3]); 
+        }
+        Plotly.plot(streamPlot3, data03, layout03);
+    }
+    // data
+    var data1 = {
+        x : tArray,
+        y : y1Track,
+        name : 'R',
+        mode: "markers+lines",  // "lines+markers"
+        line: {
+            color: "#1f77b4", 
+            width: 1
+        }, 
+        marker: {
+            color: "rgb(255, 0, 0)", 
+            size: 6, 
+            line: {
+              color: "black", 
+              width: 0.5
+            }
+        }
+    };
+    var data2 ={
+        x : tArray,
+        y : y2Track,
+        name : 'G',
+        mode: "markers+lines",  // "lines+markers"
+        line: {
+            color: "#1f77b4", 
+            width: 1
+        }, 
+        marker: {
+            color: "rgb(0, 255, 0)", 
+            size: 6, 
+            line: {
+              color: "black", 
+              width: 0.5
+            }
+        }
+    };
+    var data3 = {
+        x : tArray,
+        y : y3Track,
+        name : 'B',
+        mode: "markers+lines",  // "lines+markers"
+        line: {
+            color: "#1f77b4", 
+            width: 1
+        }, 
+        marker: {
+            color: "rgb(0, 0, 255)", 
+            size: 6, 
+            line: {
+              color: "black", 
+              width: 0.5
+            }
+        }
+    };
+
+  var data01 = [data1,data2,data3];
+
+  var data4 = {
+        x : tArray,
+        y : y4Track,
+        name : 'R',
+        mode: "markers+lines",  // "lines+markers"
+        line: {
+            color: "#1f77b4", 
+            width: 1
+        }, 
+        marker: {
+            color: "rgb(255, 0, 0)", 
+            size: 6, 
+            line: {
+              color: "black", 
+              width: 0.5
+            }
+        }
+    };
+    var data5 ={
+        x : tArray,
+        y : y5Track,
+        name : 'G',
+        mode: "markers+lines",  // "lines+markers"
+        line: {
+            color: "#1f77b4", 
+            width: 1
+        }, 
+        marker: {
+            color: "rgb(0, 255, 0)", 
+            size: 6, 
+            line: {
+              color: "black", 
+              width: 0.5
+            }
+        }
+    };
+    var data6 = {
+        x : tArray,
+        y : y6Track,
+        name : 'B',
+        mode: "markers+lines",  // "lines+markers"
+        line: {
+            color: "#1f77b4", 
+            width: 1
+        }, 
+        marker: {
+            color: "rgb(0, 0, 255)", 
+            size: 6, 
+            line: {
+              color: "black", 
+              width: 0.5
+            }
+        }
+    };
+
+  var data02 = [data4,data5,data6];
+
+  var data7 = {
+        x : tArray,
+        y : y7Track,
+        name : 'R',
+        mode: "markers+lines",  // "lines+markers"
+        line: {
+            color: "#1f77b4", 
+            width: 1
+        }, 
+        marker: {
+            color: "rgb(255, 0, 0)", 
+            size: 6, 
+            line: {
+              color: "black", 
+              width: 0.5
+            }
+        }
+    };
+    var data8 ={
+        x : tArray,
+        y : y8Track,
+        name : 'G',
+        mode: "markers+lines",  // "lines+markers"
+        line: {
+            color: "#1f77b4", 
+            width: 1
+        }, 
+        marker: {
+            color: "rgb(0, 255, 0)", 
+            size: 6, 
+            line: {
+              color: "black", 
+              width: 0.5
+            }
+        }
+    };
+    var data9 = {
+        x : tArray,
+        y : y9Track,
+        name : 'B',
+        mode: "markers+lines",  // "lines+markers"
+        line: {
+            color: "#1f77b4", 
+            width: 1
+        }, 
+        marker: {
+            color: "rgb(0, 0, 255)", 
+            size: 6, 
+            line: {
+              color: "black", 
+              width: 0.5
+            }
+        }
+    };
+
+  var data03 = [data7,data8,data9];
+
+  var layout01 = {
+    width: 600,
+    height: 300,
+    xaxis : {
+        domain : [0, 1]
+    },
+    yaxis : {
+        autorange: true,
+        domain : [0, 1],
+        range : [0, 10]
+    },
+  };
+
+  var layout02 = {
+    width: 600,
+    height: 300,
+    xaxis : {
+        domain : [0, 1]
+    },
+    yaxis : {
+        autorange: true,
+        domain : [0, 1],
+        range : [0, 10]
+    },
+  };
+
+  var layout03 = {
+    width: 600,
+    height: 300,
+    xaxis : {
+        domain : [0, 1]
+    },
+    yaxis : {
+        autorange: true,
+        domain : [0, 1],
+        range : [0, 10]
+    },
+  };
+
+</script>
+</body>
+</html>
