@@ -19,9 +19,7 @@
 
     <script>
       /* JAVASCRIPT CODE GOES HERE */
-      var streamPlot1 = document.getElementById('myDiv');
-      var streamPlot2 = document.getElementById('myDiv');
-      var streamPlot3 = document.getElementById('myDiv');
+      var streamPlot = document.getElementById('myDiv');
       var ctime = document.getElementById('time');
       var tArray = [], // time of data arrival
         y1Track = [], 
@@ -38,9 +36,17 @@
 
         numPts = 50, // number of data points in x-axis                
         dtda = [],  // 1 x 4 array : [date, data1, data2, data3] from sensors
-        preX = -1,
-        preY = -1,
-        preZ = -1,
+        preX1 = -1,
+        preY1 = -1,
+        preZ1 = -1,
+
+        preX2 = -1,
+        preY2 = -1,
+        preZ2 = -1,
+
+        preX3 = -1,
+        preY3 = -1,
+        preZ3 = -1,
         initFlag = true;
 
     var socket = io.connect('http://life21c.inje.ac.kr:3000'); // port = 3000  
@@ -78,18 +84,20 @@
             dtda[9] = parseFloat(msg[7]);
 
             // Only when any of temperature or Luminosity is different from the previous one, the screen is redrawed.
-            if (dtda[1] != preX || dtda[2] != preY || dtda[3] != preZ) {  // any change?
-                preX = dtda[1];  
-                preY = dtda[2];
-                preZ = dtda[3];
+            if (dtda[1] != preX1 || dtda[2] != preY1 || dtda[3] != preZ1 
+            || dtda[4] != preX2 || dtda[5] != preY2 || dtda[6] != preZ2
+            || dtda[7] != preX3 || dtda[8] != preY3 || dtda[9] != preZ3) {  // any change?
+                preX1 = dtda[1];  
+                preY1 = dtda[2];
+                preZ1 = dtda[3];
 
-                preX = dtda[4];  
-                preY = dtda[5];
-                preZ = dtda[6];
+                preX2 = dtda[4];  
+                preY2 = dtda[5];
+                preZ2 = dtda[6];
 
-                preX = dtda[7];  
-                preY = dtda[8];
-                preZ = dtda[9];
+                preX3 = dtda[7];  
+                preY3 = dtda[8];
+                preZ3 = dtda[9];
                                 
                 // when new data is coming, keep on streaming            
                 ctime.innerHTML = dtda[0];
@@ -118,29 +126,16 @@
                 y9Track.splice(0, 1);
 
 
-                var update1 = {
+                var update = {
                     x:  [tArray],  
-                    y:  [y1Track, y2Track, y3Track]
+                    y:  [y1Track, y2Track, y3Track
+                    , y4Track, y5Track, y6Track
+                    , y7Track, y8Track, y9Track]
                 }
 
-                Plotly.update(streamPlot1, update1);
-
-                var update2 = {
-                    x:  [tArray],  
-                    y:  [y4Track, y5Track, y6Track]
-                }
-
-                Plotly.update(streamPlot2, update2);
-
-                var update3 = {
-                    x:  [tArray],  
-                    y:  [y7Track, y8Track, y9Track]
-                }
-
-                Plotly.update(streamPlot3, update3);
-            }
-
-      });
+                Plotly.update(streamPlot, update);
+            };
+        }); 
     }); 
 
     function init() {  
@@ -149,30 +144,23 @@
             y1Track.push(dtda[1]); 
             y2Track.push(dtda[2]);  
             y3Track.push(dtda[3]); 
+
+            y4Track.push(dtda[4]); 
+            y5Track.push(dtda[5]);  
+            y6Track.push(dtda[6]);
+
+            y7Track.push(dtda[7]); 
+            y8Track.push(dtda[8]);  
+            y9Track.push(dtda[9]);
         }
-        Plotly.plot(streamPlot1, data01, layout01);
+         
+        Plotly.plot(streamPlot, data, layout);  
+
     }
 
-    function init() {  
-        for ( i = 0; i < numPts; i++) {
-            tArray.push(dtda[0]);
-            y4Track.push(dtda[1]); 
-            y5Track.push(dtda[2]);  
-            y6Track.push(dtda[3]);
-        }
-        Plotly.plot(streamPlot2, data02, layout02);
-    }
-    function init() {  
-        for ( i = 0; i < numPts; i++) {
-            tArray.push(dtda[0]);
-            y7Track.push(dtda[1]); 
-            y8Track.push(dtda[2]);  
-            y9Track.push(dtda[3]); 
-        }
-        Plotly.plot(streamPlot3, data03, layout03);
-    }
+
     // data
-    var data1 = {
+    var data = [{
         x : tArray,
         y : y1Track,
         name : 'R',
@@ -189,8 +177,7 @@
               width: 0.5
             }
         }
-    };
-    var data2 ={
+    },{
         x : tArray,
         y : y2Track,
         name : 'G',
@@ -207,8 +194,7 @@
               width: 0.5
             }
         }
-    };
-    var data3 = {
+    },{
         x : tArray,
         y : y3Track,
         name : 'B',
@@ -225,14 +211,12 @@
               width: 0.5
             }
         }
-    };
-
-  var data01 = [data1,data2,data3];
-
-  var data4 = {
+    },{
         x : tArray,
         y : y4Track,
         name : 'R',
+        xaxis: 'x2',
+        yaxis : 'y2',
         mode: "markers+lines",  // "lines+markers"
         line: {
             color: "#1f77b4", 
@@ -246,11 +230,12 @@
               width: 0.5
             }
         }
-    };
-    var data5 ={
+    },{
         x : tArray,
         y : y5Track,
         name : 'G',
+        xaxis: 'x2',
+        yaxis : 'y2',
         mode: "markers+lines",  // "lines+markers"
         line: {
             color: "#1f77b4", 
@@ -264,11 +249,12 @@
               width: 0.5
             }
         }
-    };
-    var data6 = {
+    },{
         x : tArray,
         y : y6Track,
         name : 'B',
+        xaxis: 'x2',
+        yaxis : 'y2',
         mode: "markers+lines",  // "lines+markers"
         line: {
             color: "#1f77b4", 
@@ -282,14 +268,12 @@
               width: 0.5
             }
         }
-    };
-
-  var data02 = [data4,data5,data6];
-
-  var data7 = {
+    },{
         x : tArray,
         y : y7Track,
         name : 'R',
+        xaxis: 'x3',
+        yaxis : 'y3',
         mode: "markers+lines",  // "lines+markers"
         line: {
             color: "#1f77b4", 
@@ -303,11 +287,12 @@
               width: 0.5
             }
         }
-    };
-    var data8 ={
+    },{
         x : tArray,
         y : y8Track,
         name : 'G',
+        xaxis: 'x3',
+        yaxis : 'y3',
         mode: "markers+lines",  // "lines+markers"
         line: {
             color: "#1f77b4", 
@@ -321,11 +306,12 @@
               width: 0.5
             }
         }
-    };
-    var data9 = {
+    },{
         x : tArray,
         y : y9Track,
         name : 'B',
+        xaxis: 'x3',
+        yaxis : 'y3',
         mode: "markers+lines",  // "lines+markers"
         line: {
             color: "#1f77b4", 
@@ -339,49 +325,46 @@
               width: 0.5
             }
         }
-    };
+    }];
 
-  var data03 = [data7,data8,data9];
-
-  var layout01 = {
-    width: 600,
-    height: 300,
-    xaxis : {
+  var layout = 
+  {
+    xaxis1 : {
+        title : 'time',
         domain : [0, 1]
     },
-    yaxis : {
-        autorange: true,
-        domain : [0, 1],
-        range : [0, 10]
+    yaxis1 : {
+        title : 'temp (°C)',
+        domain : [0, 0.3],
+        range : [-30, 50]
     },
-  };
 
-  var layout02 = {
-    width: 600,
-    height: 300,
-    xaxis : {
-        domain : [0, 1]
-    },
-    yaxis : {
-        autorange: true,
+    xaxis2 : {
+        title : '',
         domain : [0, 1],
-        range : [0, 10]
+        position : 0.35,
+        showticklabels: false
     },
-  };
+    yaxis2 : {
+        title : 'humi (%)',
+        domain : [0.35, 0.65],
+        range : [-30, 50]
+    },
 
-  var layout03 = {
-    width: 600,
-    height: 300,
-    xaxis : {
-        domain : [0, 1]
-    },
-    yaxis : {
-        autorange: true,
+    xaxis3 : {
+        title : '',
         domain : [0, 1],
-        range : [0, 10]
+        position : 0.7,
+        showticklabels: false
     },
-  };
-
+    yaxis3 : {
+        title : 'lumi (lux)',
+        domain : [0.7, 1],
+        range : [-30, 50]
+    }
+    
+    
+};
 </script>
 </body>
 </html>
