@@ -1,7 +1,7 @@
 // db33rgb.js
 
 var serialport = require('serialport');
-var portName = 'COM5';  // check your COM port!!
+var portName = 'COM4';  // check your COM port!!
 var port    =   process.env.PORT || 3000;  // port for DB
 
 var io = require('socket.io').listen(port);
@@ -23,28 +23,35 @@ db.once('open', function callback () {
 });
 // Schema
 var iotSchema = new Schema({
-     : String,
-     : String,
-     : String,
-
-     : String,
-     : String,
-     : String,
-
-     : String,
-     : String,
-     : String
+    date : String,
+    accelerometerx : String,
+    accelerometery : String,
+    accelerometerz : String,
+    gyroscopex : String,
+    gyroscopey : String,
+    gyroscopez : String,
+    magneticx : String,
+    magneticy : String,
+    magneticz : String
 });
 // Display data on console in the case of saving data.
 iotSchema.methods.info = function () {
     var iotInfo = this.date
-    ? "Current date: " + this.date +", Temp: " + this.temperature 
-    + ", Humi: " + this.humidity + ", Lux: " + this.luminosity + ", Pres: " + this.pressure  
-    + ", R: " + this.r_ratio + ", G: " + this.g_ratio + ", B: " + this.b_ratio
+    ? "Current date: " + this.date +
+    ", accelerox: " + this.accelerometerx + 
+    ", acceleroy: " + this.accelerometery + 
+    ", acceleroz: " + this.accelerometerz + 
+
+    ", gyrox: " + this.gyroscopex  + 
+    ", gyroy: " + this.gyroscopey + 
+    ", gyroz: " + this.gyroscopez + 
+
+    ", magnetx: " + this.magneticx +
+    ", magnety: " + this.magneticy +
+    ", magnetz: " + this.magneticz
     : "I don't have a date"
     console.log("iotInfo: " + iotInfo);
 }
-
 
 const Readline = require("@serialport/parser-readline");
 
@@ -68,13 +75,15 @@ const parser = sp.pipe(new Readline({ delimiter: "\r\n" }));
 //   });
 
 var readData = '';  // this stores the buffer
-var  = '';
-var  = '';
-var  = '';
-var  = '';
-var  = '';
-var  = '';
-var  = '';
+var accelerox = '';
+var acceleroy = '';
+var acceleroz = '';
+var gyrox = '';
+var gyroy = '';
+var gyroz = '';
+var magnetx = '';
+var magnety = '';
+var magnetz = '';
 
 var mdata =[]; // this array stores date and data from multiple sensors
 var firstcommaidx = 0;
@@ -83,8 +92,12 @@ var thirdcommaidx = 0;
 var fourthcommaidx = 0;
 var fifthcommaidx = 0;
 var sixthcommaidx = 0;
+var seventhcommaidx = 0;
+var eighthcommaidx = 0;
+var ninecommaidx = 0;
 
 var Sensor = mongoose.model("Sensor", iotSchema);  // sensor data model
+
 
 // process data using parser
 parser.on('data', (data) => { // call back when data is received
@@ -95,32 +108,54 @@ parser.on('data', (data) => { // call back when data is received
     fourthcommaidx = readData.indexOf(',',thirdcommaidx+1);
     fifthcommaidx = readData.indexOf(',',fourthcommaidx+1);
     sixthcommaidx = readData.indexOf(',',fifthcommaidx+1);
+    seventhcommaidx = readData.indexOf(',',sixthcommaidx+1);
+    eighthcommaidx = readData.indexOf(',',seventhcommaidx+1);
+    ninecommaidx = readData.indexOf(',',eighthcommaidx+1);
+
 
     // parsing data into signals
     if (readData.lastIndexOf(',') > firstcommaidx && firstcommaidx > 0) {
-        temp = readData.substring(firstcommaidx + 1, secondcommaidx);
-        humi = readData.substring(secondcommaidx + 1, thirdcommaidx);
-        lux = readData.substring(thirdcommaidx + 1, fourthcommaidx);
-        pres = readData.substring(fourthcommaidx + 1, fifthcommaidx);
-        rr = readData.substring(fifthcommaidx + 1, sixthcommaidx);
-        gg = readData.substring(sixthcommaidx + 1, readData.indexOf(',',sixthcommaidx+1));
-        bb = readData.substring(readData.lastIndexOf(',')+1);
+        accelerox = readData.substring(firstcommaidx + 1, secondcommaidx);
+        acceleroy = readData.substring(secondcommaidx + 1, thirdcommaidx);
+        acceleroz = readData.substring(thirdcommaidx + 1, fourthcommaidx);
+
+        gyrox = readData.substring(fourthcommaidx + 1, fifthcommaidx);
+        gyroy = readData.substring(fifthcommaidx + 1, sixthcommaidx);
+        gyroz = readData.substring(sixthcommaidx + 1, seventhcommaidx);
+
+        magnetx = readData.substring(seventhcommaidx + 1, eighthcommaidx);
+        magnety = readData.substring(eighthcommaidx + 1, readData.indexOf(',',eighthcommaidx+1));
+        magnetz = readData.substring(readData.lastIndexOf(',')+1);
         
         readData = '';
         
         dStr = getDateString();
         mdata[0]=dStr;    // Date
-        mdata[1]=temp;    // temperature data
-        mdata[2]=humi;    // humidity data
-        mdata[3]=lux;     //  luminosity data
-        mdata[4]=pres;    // pressure data
-        mdata[5]=rr;       // r_ratio
-        mdata[6]=gg;       // g_ratio
-        mdata[7]=bb;
-        mdata[8]=gg;       // g_ratio
-        mdata[9]=bb;
-        var iotData = new Sensor({date:dStr, temperature:temp, humidity:humi, luminosity:lux, pressure:pres, 
-            r_ratio:rr, g_ratio:gg, b_ratio:bb});
+        mdata[1]=accelerox;    // temperature data
+        mdata[2]=acceleroy;    // humidity data
+        mdata[3]=acceleroz;     //  luminosity data
+
+        mdata[4]=gyrox;    // pressure data
+        mdata[5]=gyroy;       // r_ratio
+        mdata[6]=gyroz;       // g_ratio
+
+        mdata[7]=magnetx;
+        mdata[8]=magnety;       // g_ratio
+        mdata[9]=magnetz;
+
+        var iotData = new Sensor({
+            date:dStr, 
+            accelerometerx:accelerox, 
+            accelerometery:acceleroy, 
+            accelerometerz:acceleroz, 
+
+            gyroscopex:gyrox, 
+            gyroscopey:gyroy, 
+            gyroscopez:gyroz, 
+
+            magneticx:magnetx,
+            magneticy:magnety,
+            magneticz:magnetz});
         // save iot data to MongoDB
         iotData.save(function(err,data) {
             if(err) return handleEvent(err);

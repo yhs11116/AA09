@@ -55,33 +55,33 @@
             // initial plot
             if(msg[0]!='' && initFlag){
                 dtda[0]=msg[0];
-                dtda[1]=parseFloat(msg[5]);  
-                dtda[2]=parseFloat(msg[6]); 
-                dtda[3]=parseFloat(msg[7]);  
+                dtda[1]=parseFloat(msg[1]);  
+                dtda[2]=parseFloat(msg[2]); 
+                dtda[3]=parseFloat(msg[3]);  
 
-                dtda[4]=parseFloat(msg[5]);  
-                dtda[5]=parseFloat(msg[6]); 
-                dtda[6]=parseFloat(msg[7]); 
+                dtda[4]=parseFloat(msg[4]);  
+                dtda[5]=parseFloat(msg[5]); 
+                dtda[6]=parseFloat(msg[6]); 
 
-                dtda[7]=parseFloat(msg[5]);  
-                dtda[8]=parseFloat(msg[6]); 
-                dtda[9]=parseFloat(msg[7]); 
+                dtda[7]=parseFloat(msg[7]);  
+                dtda[8]=parseFloat(msg[8]); 
+                dtda[9]=parseFloat(msg[9]); 
                 init();
                 initFlag=false;
             }
             
             dtda[0]=msg[0];
-            dtda[1] = parseFloat(msg[5]); 
-            dtda[2] = parseFloat(msg[6]);
-            dtda[3] = parseFloat(msg[7]);
+            dtda[1] = parseFloat(msg[1]); 
+            dtda[2] = parseFloat(msg[2]);
+            dtda[3] = parseFloat(msg[3]);
 
-            dtda[4] = parseFloat(msg[5]); 
-            dtda[5] = parseFloat(msg[6]);
-            dtda[6] = parseFloat(msg[7]);
+            dtda[4] = parseFloat(msg[4]); 
+            dtda[5] = parseFloat(msg[5]);
+            dtda[6] = parseFloat(msg[6]);
 
-            dtda[7] = parseFloat(msg[5]); 
-            dtda[8] = parseFloat(msg[6]);
-            dtda[9] = parseFloat(msg[7]);
+            dtda[7] = parseFloat(msg[7]); 
+            dtda[8] = parseFloat(msg[8]);
+            dtda[9] = parseFloat(msg[9]);
 
             // Only when any of temperature or Luminosity is different from the previous one, the screen is redrawed.
             if (dtda[1] != preX1 || dtda[2] != preY1 || dtda[3] != preZ1 
@@ -158,12 +158,13 @@
 
     }
 
-
     // data
     var data = [{
         x : tArray,
         y : y1Track,
-        name : 'R',
+        xaxis: 'x3',
+        yaxis : 'y3',
+        name : 'accelerox',
         mode: "markers+lines",  // "lines+markers"
         line: {
             color: "#1f77b4", 
@@ -180,7 +181,9 @@
     },{
         x : tArray,
         y : y2Track,
-        name : 'G',
+        xaxis: 'x3',
+        yaxis : 'y3',
+        name : 'acceleroy',
         mode: "markers+lines",  // "lines+markers"
         line: {
             color: "#1f77b4", 
@@ -197,7 +200,9 @@
     },{
         x : tArray,
         y : y3Track,
-        name : 'B',
+        xaxis: 'x3',
+        yaxis : 'y3',
+        name : 'acceleroz',
         mode: "markers+lines",  // "lines+markers"
         line: {
             color: "#1f77b4", 
@@ -214,7 +219,7 @@
     },{
         x : tArray,
         y : y4Track,
-        name : 'R',
+        name : 'gyrox',
         xaxis: 'x2',
         yaxis : 'y2',
         mode: "markers+lines",  // "lines+markers"
@@ -233,7 +238,7 @@
     },{
         x : tArray,
         y : y5Track,
-        name : 'G',
+        name : 'gyroy',
         xaxis: 'x2',
         yaxis : 'y2',
         mode: "markers+lines",  // "lines+markers"
@@ -252,7 +257,7 @@
     },{
         x : tArray,
         y : y6Track,
-        name : 'B',
+        name : 'gyroz',
         xaxis: 'x2',
         yaxis : 'y2',
         mode: "markers+lines",  // "lines+markers"
@@ -271,9 +276,8 @@
     },{
         x : tArray,
         y : y7Track,
-        name : 'R',
-        xaxis: 'x3',
-        yaxis : 'y3',
+        name : 'magnetx',
+        
         mode: "markers+lines",  // "lines+markers"
         line: {
             color: "#1f77b4", 
@@ -290,9 +294,8 @@
     },{
         x : tArray,
         y : y8Track,
-        name : 'G',
-        xaxis: 'x3',
-        yaxis : 'y3',
+        name : 'magnety',
+
         mode: "markers+lines",  // "lines+markers"
         line: {
             color: "#1f77b4", 
@@ -309,9 +312,8 @@
     },{
         x : tArray,
         y : y9Track,
-        name : 'B',
-        xaxis: 'x3',
-        yaxis : 'y3',
+        name : 'magnetz',
+
         mode: "markers+lines",  // "lines+markers"
         line: {
             color: "#1f77b4", 
@@ -334,7 +336,7 @@
         domain : [0, 1]
     },
     yaxis1 : {
-        title : 'temp (°C)',
+        title : 'magnet',
         domain : [0, 0.3],
         range : [-30, 50]
     },
@@ -346,7 +348,7 @@
         showticklabels: false
     },
     yaxis2 : {
-        title : 'humi (%)',
+        title : 'gyro',
         domain : [0.35, 0.65],
         range : [-30, 50]
     },
@@ -358,7 +360,7 @@
         showticklabels: false
     },
     yaxis3 : {
-        title : 'lumi (lux)',
+        title : 'accelero',
         domain : [0.7, 1],
         range : [-30, 50]
     }
