@@ -1,7 +1,6 @@
-// db33rgb.js
 
 var serialport = require('serialport');
-var portName = 'COM4';  // check your COM port!!
+var portName = 'COM3';  // check your COM port!!
 var port    =   process.env.PORT || 3000;  // port for DB
 
 var io = require('socket.io').listen(port);
@@ -124,8 +123,8 @@ parser.on('data', (data) => { // call back when data is received
         gyroz = readData.substring(sixthcommaidx + 1, seventhcommaidx);
 
         magnetx = readData.substring(seventhcommaidx + 1, eighthcommaidx);
-        magnety = readData.substring(eighthcommaidx + 1, readData.indexOf(',',eighthcommaidx+1));
-        magnetz = readData.substring(readData.lastIndexOf(',')+1);
+        magnety = readData.substring(eighthcommaidx + 1, ninecommaidx);
+        magnetz = readData.substring(ninecommaidx+1);
         
         readData = '';
         
@@ -156,6 +155,8 @@ parser.on('data', (data) => { // call back when data is received
             magneticx:magnetx,
             magneticy:magnety,
             magneticz:magnetz});
+
+
         // save iot data to MongoDB
         iotData.save(function(err,data) {
             if(err) return handleEvent(err);
@@ -189,3 +190,4 @@ function getDateString() {
     toISOString().replace(/T/, ' ').replace(/Z/, '');
     return datestr;
 }
+

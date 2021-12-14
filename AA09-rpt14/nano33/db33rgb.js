@@ -1,7 +1,7 @@
 // db33rgb.js
 
 var serialport = require('serialport');
-var portName = 'COM8';  // check your COM port!!
+var portName = 'COM3';  // check your COM port!!
 var port    =   process.env.PORT || 3000;  // port for DB
 
 var io = require('socket.io').listen(port);

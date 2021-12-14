@@ -83,6 +83,10 @@
             dtda[8] = parseFloat(msg[8]);
             dtda[9] = parseFloat(msg[9]);
 
+            ddtda[0] = Math.sqrt(Math.pow(dtda[1],2)+Math.pow(dtda[2],2)+Math.pow(dtda[3],2));
+            ddtda[1] = Math.sqrt(Math.pow(dtda[4],2)+Math.pow(dtda[5],2)+Math.pow(dtda[6],2));
+            ddtda[2] = Math.sqrt(Math.pow(dtda[7],2)+Math.pow(dtda[8],2)+Math.pow(dtda[9],2));
+
             // Only when any of temperature or Luminosity is different from the previous one, the screen is redrawed.
             if (dtda[1] != preX1 || dtda[2] != preY1 || dtda[3] != preZ1 
             || dtda[4] != preX2 || dtda[5] != preY2 || dtda[6] != preZ2
@@ -127,10 +131,8 @@
 
 
                 var update = {
-                    x:  [tArray],  
-                    y:  [y1Track, y2Track, y3Track
-                    , y4Track, y5Track, y6Track
-                    , y7Track, y8Track, y9Track]
+                    x: [tArray, tArray, tArray,tArray, tArray, tArray,tArray, tArray, tArray],
+                    y: [xTrack1, yTrack1, zTrack1,xTrack2, yTrack2, zTrack2,xTrack3, yTrack3, zTrack3]
                 }
 
                 Plotly.update(streamPlot, update);
