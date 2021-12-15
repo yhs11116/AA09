@@ -6,19 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [
-    "cds",
-    "dht22",
-    "node",
-    "arduino"
-  ],
   "author": "aa00",
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "mongoose": "^6.1.1",
-    "serialport": "^9.2.4",
+    "mongoose": "^6.1.2",
+    "serialport": "^9.2.8",
     "socket.io": "^2.4.1"
   }
 }
